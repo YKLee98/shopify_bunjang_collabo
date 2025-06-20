@@ -11,6 +11,10 @@
     "test": "echo \"Error: no test specified, please add comprehensive tests!\" && exit 0",
     "validate-config": "node src/scripts/validateConfig.js",
     "prepare": "husky install || true"
+    "check:bunjang-sold": "node src/scripts/quickCheckBunjangSold.js",
+    "loop:start": "./run-background.sh start",
+    "loop:status": "./run-background.sh status",
+    "loop:logs": "./run-background.sh logs",
   },
   "keywords": [
     "shopify",
