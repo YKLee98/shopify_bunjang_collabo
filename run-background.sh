@@ -9,9 +9,15 @@ NC='\033[0m'
 
 # 설정
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-PROJECT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
-LOG_FILE="/var/log/bunjang-check-loop.log"
+PROJECT_DIR="$SCRIPT_DIR"  # run-background.sh가 프로젝트 루트에 있으므로
+
+# 로그 디렉토리를 홈 디렉토리로 변경
+LOG_DIR="$HOME/logs"
+LOG_FILE="$LOG_DIR/bunjang-check-loop.log"
 PID_FILE="/tmp/bunjang-check-loop.pid"
+
+# 로그 디렉토리 생성
+mkdir -p "$LOG_DIR"
 
 # 함수: 실행 중인지 확인
 is_running() {
@@ -33,7 +39,7 @@ start() {
     
     echo -e "${GREEN}번개장터 체크 루프를 시작합니다...${NC}"
     
-    # 로그 파일 생성
+    # 로그 파일 생성 (홈 디렉토리에)
     touch "$LOG_FILE"
     chmod 644 "$LOG_FILE"
     
@@ -48,10 +54,12 @@ start() {
     
     if is_running; then
         echo -e "${GREEN}✅ 성공적으로 시작되었습니다. PID: $(cat "$PID_FILE")${NC}"
+        echo -e "${GREEN}로그 파일: $LOG_FILE${NC}"
         echo -e "${GREEN}로그 확인: tail -f $LOG_FILE${NC}"
         return 0
     else
         echo -e "${RED}❌ 시작에 실패했습니다. 로그를 확인하세요.${NC}"
+        echo -e "${RED}로그 확인: tail -n 50 $LOG_FILE${NC}"
         return 1
     fi
 }
@@ -87,10 +95,14 @@ status() {
         echo "프로세스 정보:"
         ps -p "$PID" -o pid,user,cmd,etime,pcpu,pmem
         echo ""
+        echo "로그 파일: $LOG_FILE"
+        echo ""
         echo "최근 로그:"
         tail -n 10 "$LOG_FILE"
     else
         echo -e "${RED}● 중지됨${NC}"
+        echo ""
+        echo "로그 파일: $LOG_FILE"
     fi
 }
 
@@ -104,6 +116,9 @@ restart() {
 # 함수: 로그 보기
 logs() {
     if [ -f "$LOG_FILE" ]; then
+        echo "로그 파일: $LOG_FILE"
+        echo "실시간 로그 (Ctrl+C로 종료):"
+        echo ""
         tail -f "$LOG_FILE"
     else
         echo -e "${RED}로그 파일이 없습니다: $LOG_FILE${NC}"
