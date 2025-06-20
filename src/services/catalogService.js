@@ -16,7 +16,7 @@ const SyncedProduct = require('../models/syncedProduct.model');
 const { calculateShopifyPriceUsd } = require('./priceCalculationService');
 const { AppError, ExternalServiceError } = require('../utils/customErrors');
 
-const BUNJANG_COLLECTION_GID = 'gid://shopify/Collection/445888299257';
+const BUNJANG_COLLECTION_GID = process.env.SHOPIFY_BUNJANG_COLLECTION_GID;
 const TEMP_DOWNLOAD_DIR = config.tempDir || './tmp_downloads';
 
 async function generateBunjangAuthHeader() {
