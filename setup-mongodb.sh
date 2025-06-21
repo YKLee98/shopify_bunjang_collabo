@@ -27,7 +27,6 @@ fi
 if [ -z "$DB_CONNECTION_STRING" ]; then
     echo -e "${YELLOW}⚠ DB_CONNECTION_STRING이 설정되지 않았습니다. 기본값을 사용합니다.${NC}"
     DB_CONNECTION_STRING="mongodb://localhost:27017/bunjangShopifyIntegrationDB_dev"
-fi
 
 echo "MongoDB 연결 문자열: $DB_CONNECTION_STRING"
 echo ""
